@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Flight Price Tracker Chatbot✈️ - Sachin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            /* Light Theme */
+            --primary-light: #2563eb;
+            --secondary-light: #059669;
+            --accent-light: #d97706;
+            --bg-light: #f5f7fa;
+            --text-light: #111827;
+            --card-light: #ffffff;
+            --input-light: #f3f4f6;
+            --chat-container-light: #e5e7eb;
+            
+            /* Dark Theme */
+            --primary-dark: #3b82f6;
+            --secondary-dark: #10b981;
+            --accent-dark: #f59e0b;
+            --bg-dark: #1f2937;
+            --text-dark: #f9fafb;
+            --card-dark: #111827;
+            --input-dark: #1e293b;
+            --chat-container-dark: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 1.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            background-color: var(--card);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .credit {
+            font-size: 0.875rem;
+            color: var(--text);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .chat-outer-container {
+            background-color: var(--chat-container);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .chat-container {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            height: 65vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bot-message {
+            background-color: var(--primary);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background-color: var(--input);
+            color: var(--text);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .option-btn {
+            padding: 0.75rem 1.25rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .option-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .option-btn.secondary {
+            background-color: var(--secondary);
+        }
+
+        .option-btn.accent {
+            background-color: var(--accent);
+        }
+
+        .input-container {
+            margin-top: 1.25rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--input);
+            border-radius: 12px;
+            background-color: var(--input);
+            color: var(--text);
+            font-size: 0.9375rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--card);
+        }
+
+        .send-btn {
+            padding: 0 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 0.75rem;
+            color: var(--text);
+            opacity: 0.7;
+            font-size: 0.875rem;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .price-up {
+            color: #ef4444;
+        }
+
+        .price-down {
+            color: #10b981;
+        }
+
+        .flight-card {
+            background-color: var(--input);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 0.75rem 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .flight-card h4 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .flight-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8125rem;
+            color: var(--text);
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .flight-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .flight-link:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestion-chip {
+            display: inline-block;
+            padding: 0.5rem 0.75rem;
+            background-color: var(--input);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .header { padding: 1.25rem; }
+            .header h1 { font-size: 1.5rem; }
+            .chat-container { height: 60vh; }
+            .message { max-width: 90%; }
+            .option-btn { padding: 0.625rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <h1>AI Flight Price Tracker Chatbot ✈️</h1>
+            <div class="credit">Sachin Kumar Singh | 12403515</div>
+            <p>Find the best domestic & international flight deals</p>
+        </div>
+
+        <div class="chat-outer-container">
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages"></div>
+                <div class="typing-indicator" id="typing">
+                    <i class="fas fa-circle-notch fa-spin"></i> Searching flights...
+                </div>
+                <div class="input-container">
+                    <input type="text" id="user-input" placeholder="Try 'Delhi to Mumbai' or 'New York to London'">
+                    <button class="send-btn" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const chatMessages = document.getElementById('chat-messages');
+        const typingIndicator = document.getElementById('typing');
+        const userInput = document.getElementById('user-input');
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Theme Management
+        let darkMode = localStorage.getItem('darkMode') === 'true';
+        updateTheme();
+
+        themeToggle.addEventListener('click', () => {
+            darkMode = !darkMode;
+            localStorage.setItem('darkMode', darkMode);
+            updateTheme();
+        });
+
+        function updateTheme() {
+            if (darkMode) {
+                body.style.setProperty('--primary', 'var(--primary-dark)');
+                body.style.setProperty('--secondary', 'var(--secondary-dark)');
+                body.style.setProperty('--accent', 'var(--accent-dark)');
+                body.style.setProperty('--bg', 'var(--bg-dark)');
+                body.style.setProperty('--text', 'var(--text-dark)');
+                body.style.setProperty('--card', 'var(--card-dark)');
+                body.style.setProperty('--input', 'var(--input-dark)');
+                body.style.setProperty('--chat-container', 'var(--chat-container-dark)');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                body.style.setProperty('--primary', 'var(--primary-light)');
+                body.style.setProperty('--secondary', 'var(--secondary-light)');
+                body.style.setProperty('--accent', 'var(--accent-light)');
+                body.style.setProperty('--bg', 'var(--bg-light)');
+                body.style.setProperty('--text', 'var(--text-light)');
+                body.style.setProperty('--card', 'var(--card-light)');
+                body.style.setProperty('--input', 'var(--input-light)');
+                body.style.setProperty('--chat-container', 'var(--chat-container-light)');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+
+        // Comprehensive Flight Database
+        const flightDatabase = {
+            // Domestic Flights (India)
+            "DEL-BOM": {
+                id: "DEL-BOM",
+                route: "Delhi to Mumbai",
+                price: 4850,
+                prevPrice: 5200,
+                airline: "IndiGo",
+                flightNo: "6E-123",
+                duration: "2h 15m",
+                departure: "08:00",
+                arrival: "10:15",
+                days: "Daily",
+                bookingLink: "https://www.goindigo.in/"
+            },
+            "BOM-DEL": {
+                id: "BOM-DEL",
+                route: "Mumbai to Delhi",
+                price: 4950,
+                prevPrice: 5300,
+                airline: "Vistara",
+                flightNo: "UK-945",
+                duration: "2h 10m",
+                departure: "18:30",
+                arrival: "20:40",
+                days: "Daily",
+                bookingLink: "https://www.airvistara.com/"
+            },
+            "DEL-BLR": {
+                id: "DEL-BLR",
+                route: "Delhi to Bangalore",
+                price: 5200,
+                prevPrice: 5600,
+                airline: "Air India",
+                flightNo: "AI-806",
+                duration: "2h 45m",
+                departure: "07:15",
+                arrival: "10:00",
+                days: "Daily",
+                bookingLink: "https://www.airindia.in/"
+            },
+            "BLR-DEL": {
+                id: "BLR-DEL",
+                route: "Bangalore to Delhi",
+                price: 5400,
+                prevPrice: 5800,
+                airline: "SpiceJet",
+                flightNo: "SG-521",
+                duration: "2h 50m",
+                departure: "21:00",
+                arrival: "23:50",
+                days: "Daily",
+                bookingLink: "https://www.spicejet.com/"
+            },
+            "BOM-HYD": {
+                id: "BOM-HYD",
+                route: "Mumbai to Hyderabad",
+                price: 4200,
+                prevPrice: 4500,
+                airline: "IndiGo",
+                flightNo: "6E-543",
+                duration: "1h 45m",
+                departure: "11:30",
+                arrival: "13:15",
+                days: "Daily",
+                bookingLink: "https://www.goindigo.in/"
+            },
+            "HYD-BOM": {
+                id: "HYD-BOM",
+                route: "Hyderabad to Mumbai",
+                price: 4100,
+                prevPrice: 4400,
+                airline: "Air India",
+                flightNo: "AI-619",
+                duration: "1h 40m",
+                departure: "17:45",
+                arrival: "19:25",
+                days: "Daily",
+                bookingLink: "https://www.airindia.in/"
+            },
+            "DEL-GOI": {
+                id: "DEL-GOI",
+                route: "Delhi to Goa",
+                price: 5600,
+                prevPrice: 6000,
+                airline: "Vistara",
+                flightNo: "UK-789",
+                duration: "2h 45m",
+                departure: "14:00",
+                arrival: "16:45",
+                days: "Mon, Wed, Fri, Sun",
+                bookingLink: "https://www.airvistara.com/"
+            },
+            "GOI-DEL": {
+                id: "GOI-DEL",
+                route: "Goa to Delhi",
+                price: 5700,
+                prevPrice: 6100,
+                airline: "IndiGo",
+                flightNo: "6E-245",
+                duration: "2h 40m",
+                departure: "10:15",
+                arrival: "12:55",
+                days: "Mon, Wed, Fri, Sun",
+                bookingLink: "https://www.goindigo.in/"
+            },
+            
+            // International Flights
+            "DEL-LHR": {
+                id: "DEL-LHR",
+                route: "Delhi to London",
+                price: 38500,
+                prevPrice: 42000,
+                airline: "British Airways",
+                flightNo: "BA-142",
+                duration: "9h 30m",
+                departure: "13:45",
+                arrival: "18:15",
+                days: "Daily",
+                bookingLink: "https://www.britishairways.com/"
+            },
+            "LHR-DEL": {
+                id: "LHR-DEL",
+                route: "London to Delhi",
+                price: 39500,
+                prevPrice: 43000,
+                airline: "Virgin Atlantic",
+                flightNo: "VS-302",
+                duration: "8h 45m",
+                departure: "21:30",
+                arrival: "10:15",
+                days: "Daily",
+                bookingLink: "https://fly.virginatlantic.com/"
+            },
+            "BOM-DXB": {
+                id: "BOM-DXB",
+                route: "Mumbai to Dubai",
+                price: 12500,
+                prevPrice: 14500,
+                airline: "Emirates",
+                flightNo: "EK-506",
+                duration: "3h 15m",
+                departure: "21:30",
+                arrival: "23:45",
+                days: "Daily",
+                bookingLink: "https://www.emirates.com/"
+            },
+            "DXB-BOM": {
+                id: "DXB-BOM",
+                route: "Dubai to Mumbai",
+                price: 13500,
+                prevPrice: 15500,
+                airline: "Emirates",
+                flightNo: "EK-507",
+                duration: "3h 30m",
+                departure: "02:15",
+                arrival: "06:45",
+                days: "Daily",
+                bookingLink: "https://www.emirates.com/"
+            },
+            "DEL-SIN": {
+                id: "DEL-SIN",
+                route: "Delhi to Singapore",
+                price: 18500,
+                prevPrice: 21000,
+                airline: "Singapore Airlines",
+                flightNo: "SQ-402",
+                duration: "5h 45m",
+                departure: "02:15",
+                arrival: "09:00",
+                days: "Daily",
+                bookingLink: "https://www.singaporeair.com/"
+            },
+            "SIN-DEL": {
+                id: "SIN-DEL",
+                route: "Singapore to Delhi",
+                price: 19500,
+                prevPrice: 22000,
+                airline: "Air India",
+                flightNo: "AI-382",
+                duration: "5h 30m",
+                departure: "22:30",
+                arrival: "01:00",
+                days: "Daily",
+                bookingLink: "https://www.airindia.in/"
+            },
+            "BLR-KUL": {
+                id: "BLR-KUL",
+                route: "Bangalore to Kuala Lumpur",
+                price: 14500,
+                prevPrice: 16500,
+                airline: "AirAsia",
+                flightNo: "AK-121",
+                duration: "4h 30m",
+                departure: "08:45",
+                arrival: "14:15",
+                days: "Mon, Wed, Fri, Sun",
+                bookingLink: "https://www.airasia.com/"
+            },
+            "KUL-BLR": {
+                id: "KUL-BLR",
+                route: "Kuala Lumpur to Bangalore",
+                price: 15500,
+                prevPrice: 17500,
+                airline: "Malaysia Airlines",
+                flightNo: "MH-182",
+                duration: "4h 15m",
+                departure: "16:30",
+                arrival: "19:45",
+                days: "Mon, Wed, Fri, Sun",
+                bookingLink: "https://www.malaysiaairlines.com/"
+            },
+            "DEL-JFK": {
+                id: "DEL-JFK",
+                route: "Delhi to New York",
+                price: 48500,
+                prevPrice: 52000,
+                airline: "Air India",
+                flightNo: "AI-102",
+                duration: "15h 30m",
+                departure: "00:30",
+                arrival: "06:00",
+                days: "Daily",
+                bookingLink: "https://www.airindia.in/"
+            },
+            "JFK-DEL": {
+                id: "JFK-DEL",
+                route: "New York to Delhi",
+                price: 49500,
+                prevPrice: 53000,
+                airline: "United Airlines",
+                flightNo: "UA-83",
+                duration: "14h 45m",
+                departure: "21:45",
+                arrival: "22:30",
+                days: "Daily",
+                bookingLink: "https://www.united.com/"
+            },
+            "BOM-CDG": {
+                id: "BOM-CDG",
+                route: "Mumbai to Paris",
+                price: 32500,
+                prevPrice: 35000,
+                airline: "Air France",
+                flightNo: "AF-218",
+                duration: "9h 15m",
+                departure: "02:30",
+                arrival: "08:45",
+                days: "Tue, Thu, Sat",
+                bookingLink: "https://www.airfrance.com/"
+            },
+            "CDG-BOM": {
+                id: "CDG-BOM",
+                route: "Paris to Mumbai",
+                price: 33500,
+                prevPrice: 36000,
+                airline: "Air France",
+                flightNo: "AF-219",
+                duration: "8h 45m",
+                departure: "22:15",
+                arrival: "10:00",
+                days: "Tue, Thu, Sat",
+                bookingLink: "https://www.airfrance.com/"
+            }
+        };
+
+        // City Autocorrect Database
+        const cityAutocorrect = {
+            // Indian cities
+            "delhi": "Delhi", "new delhi": "Delhi", "noida": "Delhi", "del": "Delhi",
+            "mumbai": "Mumbai", "bombay": "Mumbai", "mum": "Mumbai",
+            "bangalore": "Bangalore", "bengaluru": "Bangalore", "blr": "Bangalore",
+            "hyderabad": "Hyderabad", "hyd": "Hyderabad", "hydrabad": "Hyderabad",
+            "chennai": "Chennai", "madras": "Chennai", "maa": "Chennai",
+            "kolkata": "Kolkata", "calcutta": "Kolkata", "ccu": "Kolkata",
+            "goa": "Goa", "dabolim": "Goa", "goi": "Goa",
+            
+            // International cities
+            "london": "London", "lhr": "London", "lon": "London",
+            "dubai": "Dubai", "dxb": "Dubai", "dubay": "Dubai",
+            "singapore": "Singapore", "sin": "Singapore", "singapur": "Singapore", "syd": "Singapore",
+            "kuala lumpur": "Kuala Lumpur", "kl": "Kuala Lumpur", "kualalumpur": "Kuala Lumpur", "kul": "Kuala Lumpur",
+            "new york": "New York", "nyc": "New York", "jfk": "New York",
+            "paris": "Paris", "cdg": "Paris"
+        };
+
+        // User Data
+        let trackedFlights = JSON.parse(localStorage.getItem('trackedFlights')) || [];
+        let currentContext = null;
+
+        // Initialize Chat
+        initChat();
+
+        function initChat() {
+            addBotMessage("Welcome to AI Flight Price Tracker! How can I assist you today?", [
+                { text: "Find Flights", icon: "fa-search", action: "find-flights", class: "" },
+                { text: "Track Prices", icon: "fa-bell", action: "track-prices", class: "secondary" },
+                { text: "View Deals", icon: "fa-percentage", action: "view-deals", class: "accent" }
+            ]);
+        }
+
+        function addBotMessage(content, buttons = []) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'bot-message');
+            messageDiv.innerHTML = content;
+
+            if (buttons.length > 0) {
+                const optionsContainer = document.createElement('div');
+                optionsContainer.classList.add('options-container');
+                
+                buttons.forEach(btn => {
+                    const button = document.createElement('button');
+                    button.classList.add('option-btn');
+                    if (btn.class) button.classList.add(btn.class);
+                    button.innerHTML = `<i class="fas ${btn.icon}"></i> ${btn.text}`;
+                    button.onclick = () => handleAction(btn.action);
+                    optionsContainer.appendChild(button);
+                });
+                
+                messageDiv.appendChild(optionsContainer);
+            }
+
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addUserMessage(content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', 'user-message');
+            messageDiv.textContent = content;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTyping() {
+            typingIndicator.style.display = 'flex';
+            scrollToBottom();
+        }
+
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleAction(action) {
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                
+                switch(action) {
+                    case 'find-flights':
+                        currentContext = 'find-flights';
+                        addBotMessage("✈️ Where would you like to fly?<br>Try:", [
+                            { text: "Delhi-Mumbai", icon: "fa-plane", action: "quick-DEL-BOM", class: "" },
+                            { text: "Mumbai-Dubai", icon: "fa-globe", action: "quick-BOM-DXB", class: "accent" },
+                            { text: "Delhi-London", icon: "fa-globe", action: "quick-DEL-LHR", class: "accent" }
+                        ]);
+                        break;
+                        
+                    case 'track-prices':
+                        currentContext = 'track-prices';
+                        addBotMessage("🔔 Which route would you like to track?", [
+                            { text: "Domestic", icon: "fa-home", action: "track-domestic", class: "" },
+                            { text: "International", icon: "fa-globe", action: "track-international", class: "accent" }
+                        ]);
+                        break;
+                        
+                    case 'view-deals':
+                        showFlightDeals();
+                        break;
+                        
+                    case 'track-domestic':
+                        addBotMessage("Select a domestic route to track:", [
+                            { text: "Delhi-Mumbai", icon: "fa-plane", action: "track-DEL-BOM", class: "" },
+                            { text: "Bangalore-Delhi", icon: "fa-plane", action: "track-BLR-DEL", class: "" },
+                            { text: "Mumbai-Goa", icon: "fa-plane", action: "track-BOM-GOI", class: "" }
+                        ]);
+                        break;
+                        
+                    case 'track-international':
+                        addBotMessage("Select an international route to track:", [
+                            { text: "Delhi-London", icon: "fa-globe", action: "track-DEL-LHR", class: "accent" },
+                            { text: "Mumbai-Dubai", icon: "fa-globe", action: "track-BOM-DXB", class: "accent" },
+                            { text: "Bangalore-Singapore", icon: "fa-globe", action: "track-BLR-SIN", class: "accent" }
+                        ]);
+                        break;
+                        
+                    case 'back-to-menu':
+                        initChat();
+                        break;
+                        
+                    default:
+                        if (action.startsWith('quick-')) {
+                            const flightId = action.replace('quick-', '');
+                            showFlightDetails(flightId);
+                        }
+                        else if (action.startsWith('track-')) {
+                            const flightId = action.replace('track-', '');
+                            trackFlight(flightId);
+                        }
+                        else if (action.startsWith('details-')) {
+                            const flightId = action.replace('details-', '');
+                            showFlightDetails(flightId);
+                        }
+                }
+            }, 500);
+        }
+
+        function autocorrectQuery(query) {
+            // Convert to lowercase and trim
+            let corrected = query.toLowerCase().trim();
+            
+            // Replace common misspellings
+            Object.keys(cityAutocorrect).forEach(wrong => {
+                const regex = new RegExp(`\\b${wrong}\\b`, 'gi');
+                corrected = corrected.replace(regex, cityAutocorrect[wrong]);
+            });
+            
+            // Capitalize first letter of each word
+            corrected = corrected.split(' ').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+            
+            return corrected;
+        }
+
+        function findFlights(query) {
+            const correctedQuery = autocorrectQuery(query);
+            addUserMessage(query); // Show original query
+            
+            // Show corrected version if different
+            if (correctedQuery !== query) {
+                addBotMessage(`Showing results for: <i>"${correctedQuery}"</i>`);
+            }
+            
+            // Try to match the route pattern
+            const routeMatch = correctedQuery.match(/(.+?)\s+(?:to|from|->|-)\s+(.+)/i) || 
+                              correctedQuery.match(/(?:flights?\s+)?(?:from\s+)?(.+?)\s+(?:to\s+)?(.+)/i);
+            
+            if (routeMatch) {
+                const fromCity = routeMatch[1].trim();
+                const toCity = routeMatch[2].trim();
+                
+                // Find matching flights
+                const matchingFlights = Object.values(flightDatabase).filter(flight => {
+                    const [flightFrom, flightTo] = flight.route.split(' to ');
+                    return (flightFrom.includes(fromCity) && flightTo.includes(toCity)) || 
+                           (flightTo.includes(fromCity) && flightFrom.includes(fromCity));
+                });
+                
+                if (matchingFlights.length > 0) {
+                    showFlightResults(matchingFlights, correctedQuery);
+                } else {
+                    showAlternativeSuggestions(fromCity, toCity);
+                }
+            } else {
+                // Handle destination-only queries
+                const destinationMatch = correctedQuery.match(/(?:flights?\s+)?(?:to\s+)?(.+)/i);
+                if (destinationMatch) {
+                    const destination = destinationMatch[1].trim();
+                    const matchingFlights = Object.values(flightDatabase).filter(flight => 
+                        flight.route.includes(destination)
+                    );
+                    
+                    if (matchingFlights.length > 0) {
+                        showFlightResults(matchingFlights, correctedQuery);
+                    } else {
+                        showPopularDestinations();
+                    }
+                }
+            }
+        }
+
+        function showFlightResults(flights, query) {
+            let message = `<b>✈️ Flights ${query}</b><br>`;
+            
+            flights.forEach(flight => {
+                const priceChange = flight.prevPrice - flight.price;
+                const changeIcon = priceChange > 0 ? '▼' : priceChange < 0 ? '▲' : '';
+                const changeClass = priceChange > 0 ? 'price-down' : priceChange < 0 ? 'price-up' : '';
+                const discount = priceChange > 0 ? Math.round(priceChange / flight.prevPrice * 100) : 0;
+                
+                message += `
+                    <div class="flight-card">
+                        <h4>${flight.route} <small>(${flight.airline})</small></h4>
+                        <div>
+                            <b>₹${flight.price.toLocaleString()}</b>
+                            ${priceChange > 0 ? `<span class="${changeClass}">${changeIcon} ${discount}% OFF</span>` : ''}
+                        </div>
+                        <div class="flight-meta">
+                            <span>${flight.departure} → ${flight.arrival}</span>
+                            <span>${flight.duration}</span>
+                        </div>
+                        <div class="flight-meta">
+                            <span>Flight: ${flight.flightNo}</span>
+                            <span>${flight.days}</span>
+                        </div>
+                        <a href="${flight.bookingLink}" target="_blank" class="flight-link">
+                            <i class="fas fa-external-link-alt"></i> Book on ${flight.airline}
+                        </a>
+                    </div>
+                `;
+            });
+            
+            addBotMessage(message, [
+                { text: "Track Price", icon: "fa-bell", action: `track-${flights[0].id}`, class: "secondary" },
+                { text: "New Search", icon: "fa-search", action: "find-flights", class: "" }
+            ]);
+        }
+
+        function showFlightDeals() {
+            const deals = [
+                flightDatabase["DEL-BOM"],
+                flightDatabase["BOM-DXB"],
+                flightDatabase["DEL-LHR"],
+                flightDatabase["BLR-KUL"]
+            ];
+            
+            let message = `<b>🔥 Today's Best Flight Deals</b><br>`;
+            
+            deals.forEach(flight => {
+                const discount = Math.round((flight.prevPrice - flight.price) / flight.prevPrice * 100);
+                
+                message += `
+                    <div class="flight-card">
+                        <h4>${flight.route}</h4>
+                        <div><b>₹${flight.price.toLocaleString()}</b> <span class="price-down">▼ ${discount}% OFF</span></div>
+                        <div class="flight-meta">
+                            <span>${flight.airline}</span>
+                            <span>${flight.duration}</span>
+                        </div>
+                        <a href="${flight.bookingLink}" target="_blank" class="flight-link">
+                            <i class="fas fa-external-link-alt"></i> Book Now
+                        </a>
+                    </div>
+                `;
+            });
+            
+            addBotMessage(message, [
+                { text: "Find Flights", icon: "fa-search", action: "find-flights", class: "" },
+                { text: "Main Menu", icon: "fa-home", action: "back-to-menu", class: "" }
+            ]);
+        }
+
+        function showAlternativeSuggestions(fromCity, toCity) {
+            let message = `Sorry, I couldn't find flights from ${fromCity} to ${toCity}.`;
+            message += `<br><br>Try these popular routes instead:`;
+            
+            const suggestions = [
+                { route: "Delhi to Mumbai", action: "quick-DEL-BOM" },
+                { route: "Mumbai to Dubai", action: "quick-BOM-DXB" },
+                { route: "Delhi to London", action: "quick-DEL-LHR" },
+                { route: "Bangalore to Singapore", action: "quick-BLR-SIN" }
+            ];
+            
+            suggestions.forEach(s => {
+                message += `<div class="suggestion-chip" onclick="handleAction('${s.action}')">${s.route}</div>`;
+            });
+            
+            addBotMessage(message, [
+                { text: "International", icon: "fa-globe", action: "international-flights", class: "accent" },
+                { text: "Main Menu", icon: "fa-home", action: "back-to-menu", class: "" }
+            ]);
+        }
+
+        function showPopularDestinations() {
+            addBotMessage("Here are our most popular destinations:", [
+                { text: "Delhi ✈️", icon: "fa-plane", action: "quick-DEL-BOM", class: "" },
+                { text: "Dubai ✈️", icon: "fa-globe", action: "quick-BOM-DXB", class: "accent" },
+                { text: "London ✈️", icon: "fa-globe", action: "quick-DEL-LHR", class: "accent" }
+            ]);
+        }
+
+        function trackFlight(flightId) {
+            const flight = flightDatabase[flightId];
+            
+            if (flight) {
+                if (!trackedFlights.some(f => f.id === flightId)) {
+                    trackedFlights.push({
+                        ...flight,
+                        trackedAt: new Date().toISOString(),
+                        alertPrice: Math.floor(flight.price * 0.9) // 10% below current
+                    });
+                    localStorage.setItem('trackedFlights', JSON.stringify(trackedFlights));
+                    
+                    addBotMessage(`🔔 Now tracking ${flight.route}! I'll notify you if price drops below ₹${Math.floor(flight.price * 0.9).toLocaleString()}.`, [
+                        { text: "View Tracked", icon: "fa-list", action: "view-tracked", class: "" },
+                        { text: "Find More", icon: "fa-search", action: "find-flights", class: "" }
+                    ]);
+                } else {
+                    addBotMessage(`You're already tracking ${flight.route}. Current price: ₹${flight.price.toLocaleString()}`, [
+                        { text: "View Tracked", icon: "fa-list", action: "view-tracked", class: "" },
+                        { text: "Back", icon: "fa-arrow-left", action: "back-to-menu", class: "" }
+                    ]);
+                }
+            }
+        }
+
+        function showFlightDetails(flightId) {
+            const flight = flightDatabase[flightId];
+            
+            if (flight) {
+                let message = `
+                    <b>✈️ Flight Details</b>
+                    <div class="flight-card">
+                        <h4>${flight.route} <small>(${flight.airline})</small></h4>
+                        <div><b>₹${flight.price.toLocaleString()}</b></div>
+                        <div class="flight-meta">
+                            <span>${flight.flightNo}</span>
+                            <span>${flight.duration}</span>
+                        </div>
+                        <div class="flight-meta">
+                            <span>Departs: ${flight.departure}</span>
+                            <span>Arrives: ${flight.arrival}</span>
+                        </div>
+                        <div class="flight-meta">
+                            <span>Days: ${flight.days}</span>
+                        </div>
+                        <a href="${flight.bookingLink}" target="_blank" class="flight-link">
+                            <i class="fas fa-external-link-alt"></i> Book Now
+                        </a>
+                    </div>
+                `;
+                
+                addBotMessage(message, [
+                    { text: "Track Price", icon: "fa-bell", action: `track-${flight.id}`, class: "secondary" },
+                    { text: "Find Flights", icon: "fa-search", action: "find-flights", class: "" }
+                ]);
+            }
+        }
+
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                
+                if (currentContext === 'find-flights') {
+                    findFlights(message);
+                }
+                else if (currentContext === 'track-prices') {
+                    // Simplified tracking logic for demo
+                    const flight = Object.values(flightDatabase).find(f => 
+                        message.includes(f.route.split(' to ')[0]) && 
+                        message.includes(f.route.split(' to ')[1])
+                    );
+                    
+                    if (flight) {
+                        trackFlight(flight.id);
+                    } else {
+                        addBotMessage("I couldn't find that exact route. Try one of these:", [
+                            { text: "Delhi-London", icon: "fa-plane", action: "track-DEL-LHR", class: "accent" },
+                            { text: "Mumbai-Dubai", icon: "fa-plane", action: "track-BOM-DXB", class: "accent" }
+                        ]);
+                    }
+                }
+                else {
+                    // Try to understand general queries
+                    if (message.toLowerCase().includes('flight') || message.toLowerCase().includes('fly')) {
+                        findFlights(message);
+                    } 
+                    else if (message.toLowerCase().includes('track') || message.toLowerCase().includes('alert')) {
+                        currentContext = 'track-prices';
+                        const flight = Object.values(flightDatabase).find(f => 
+                            message.includes(f.route.split(' to ')[0]) || 
+                            message.includes(f.route.split(' to ')[1])
+                        );
+                        
+                        if (flight) {
+                            trackFlight(flight.id);
+                        } else {
+                            addBotMessage("Which route would you like to track? (e.g., 'Delhi to London')");
+                        }
+                    }
+                    else if (message.toLowerCase().includes('international')) {
+                        showInternationalFlights();
+                    }
+                    else {
+                        addBotMessage("I can help you find and track flight prices. Try:", [
+                            { text: "Delhi to Mumbai", icon: "fa-plane", action: "quick-DEL-BOM", class: "" },
+                            { text: "International", icon: "fa-globe", action: "international-flights", class: "accent" }
+                        ]);
+                    }
+                }
+                
+                userInput.value = '';
+            }, 800);
+        }
+
+        // Handle Enter key press
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
