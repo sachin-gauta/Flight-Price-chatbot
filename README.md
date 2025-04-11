@@ -2,7 +2,8 @@
 AI Flight Price Tracker with API Integration
 # ✈️ GlobalFlight Tracker - AI Flight Price Chatbot
 
-https://github.com/user-attachments/assets/bbb4e9a2-4173-49a1-a65e-70d62d924887
+![Screenshot 2025-04-11 192225](https://github.com/user-attachments/assets/1ce55891-367f-4343-9503-4ce1a0697e4a)
+
 
 An intelligent chatbot that helps users track flight prices for both domestic (India) and international routes, with autocorrect functionality and dark/light mode support.
 
